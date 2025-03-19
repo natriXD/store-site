@@ -1,0 +1,28 @@
+ /* Исправление анимации закрытия */
+ .modal-overlay {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(3px);
+}
+.notification {
+    animation: slideIn 0.3s ease-out;
+}
+@keyframes slideIn {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+.modal-close-btn {
+    transition: all 0.3s;
+    cursor: pointer;
+    transform-origin: center;
+}
+.modal-close-btn:hover {
+    
+    opacity: 3;
+}
+
+/* Улучшение видимости выбранного размера */
+.size-selected {
+    background-color: #2d2d2d !important;
+    color: white !important;
+    border: 2px solid black;
+}

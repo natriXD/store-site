@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhyNotClothes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Исправление анимации закрытия */
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(3px);
+        }
+        .notification {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        .modal-close-btn {
+            transition: all 0.3s;
+            cursor: pointer;
+            transform-origin: center;
+        }
+        .modal-close-btn:hover {
+            
+            opacity: 3;
+        }
+
+        /* Улучшение видимости выбранного размера */
+        .size-selected {
+            background-color: #2d2d2d !important;
+            color: white !important;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body class="bg-white text-black">
+    <!-- Навигация -->
+    <header class="fixed w-full bg-gray-500 z-50 shadow-md">
+        <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="toggleCartModal()">
+                <span class="text-xl">🛒</span>
+                <span id="cart-count" class="font-bold">0</span>
+            </div>
+            <h1 class="text-2xl font-bold">WhyNotClothes</h1>
+            <button onclick="toggleCartModal()" class="bg-black text-white px-4 py-2 rounded-lg">
+                Checkout
+            </button>
+        </nav>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="pt-20 pb-10 container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6" id="products-grid"></div>
+    </main>
+
+    <!-- Уведомление -->
+    <div id="notification" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-3 rounded-lg notification hidden">
+        Ваш товар добавлен в корзину!
+    </div>
+
+    <!-- Модальное окно товара -->
+    <div id="product-modal" class="fixed inset-0 modal-overlay hidden">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white w-full max-w-4xl mx-4 rounded-lg overflow-hidden relative">
+                <button onclick="closeProductModal()" class="modal-close-btn absolute top-4 right-4 text-2xl p-2 z-50">×</button>
+                <div class="flex">
+                    <div class="w-1/2 bg-gray-100 p-6">
+                        <img id="modal-image" src="" alt="" class="w-full h-96 object-contain">
+                    </div>
+                    <div class="w-1/2 p-6 flex flex-col justify-between">
+                        <div>
+                            <h2 id="modal-title" class="text-3xl font-bold mb-2"></h2>
+                            <p id="modal-price" class="text-2xl mb-4"></p>
+                            <div class="mb-6">
+                                <label class="block text-sm font-bold mb-2">Размер:</label>
+                                <div id="size-buttons" class="flex flex-wrap gap-2"></div>
+                            </div>
+                            <p id="modal-details" class="text-sm text-gray-600"></p>
+                        </div>
+                        <button onclick="addToCart()" class="bg-black text-white w-full py-3 rounded-lg mt-4">
+                            Добавить в корзину
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно корзины -->
+    <div id="cart-modal" class="fixed inset-0 modal-overlay hidden">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white w-full max-w-2xl mx-4 rounded-lg">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">Корзина</h2>
+                        <button onclick="toggleCartModal()" class="modal-close-btn text-2xl p-2">×</button>
+                    </div>
+                    <div id="cart-items" class="mb-6 max-h-96 overflow-y-auto"></div>
+                    <div class="border-t pt-4">
+                        <input type="text" id="promo-code" placeholder="Введите промокод" 
+                               class="w-full border p-2 mb-4 rounded">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="font-bold">Итого:</span>
+                            <span id="cart-total" class="text-xl font-bold">0₽</span>
+                        </div>
+                        <button onclick="toggleCheckoutModal()" 
+                                class="bg-black text-white w-full py-3 rounded-lg">
+                            Оформить заказ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно оформления -->
+    <div id="checkout-modal" class="fixed inset-0 modal-overlay hidden">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white w-full max-w-2xl mx-4 rounded-lg">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">Оформление заказа</h2>
+                        <button onclick="toggleCheckoutModal()" class="modal-close-btn text-2xl p-2">×</button>
+                    </div>
+                    <form id="order-form" onsubmit="submitOrder(event)">
+                        <div class="mb-6">
+                            <h3 class="text-lg font-bold mb-4">Контактные данные</h3>
+                            <input type="text" name="name" placeholder="ФИО" required 
+                                   class="w-full border p-2 mb-3 rounded">
+                            <input type="tel" name="phone" placeholder="Телефон" required 
+                                   class="w-full border p-2 mb-3 rounded">
+                            <input type="email" name="email" placeholder="Email" required 
+                                   class="w-full border p-2 rounded">
+                        </div>
+                        <div class="mb-6">
+                            <h3 class="text-lg font-bold mb-4">Доставка</h3>
+                            <select name="delivery" id="delivery-type" class="w-full border p-2 rounded mb-3">
+                                <option value="pickup">Самовывоз (бесплатно)</option>
+                                <option value="courier">Курьер (+500₽)</option>
+                            </select>
+                            <div id="delivery-info" class="text-sm text-gray-600"></div>
+                        </div>
+                        <div class="mb-6">
+                            <h3 class="text-lg font-bold mb-4">Способ оплаты</h3>
+                            <select name="payment" class="w-full border p-2 rounded">
+                                <option value="card">Картой онлайн</option>
+                                <option value="cash">Наличными при получении</option>
+                                <option value="parts">Долями</option>
+                            </select>
+                        </div>
+                        <label class="flex items-center gap-2 mb-6">
+                            <input type="checkbox" required class="w-4 h-4">
+                            <span>Согласен на обработку персональных данных</span>
+                        </label>
+                        <button type="submit" class="bg-black text-white w-full py-3 rounded-lg">
+                            Подтвердить заказ
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+       <script src="script.js"></script>
+</body>
+</html>
