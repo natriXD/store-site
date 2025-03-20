@@ -34,12 +34,34 @@
             color: white !important;
             border: 2px solid black;
         }
+        @media (max-width: 640px) {
+        .product-modal-inner {
+            flex-direction: column;
+            height: 90vh;
+        }
+        
+        .modal-close-btn {
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .product-image-section,
+        .product-info-section {
+            width: 100% !important;
+            height: 50%;
+        }
+        
+        .product-title {
+            font-size: 1.5rem;
+        }
+    }
     </style>
 </head>
 <body class="bg-white text-black">
     <!-- Навигация -->
-    <header class="fixed w-full bg-gray-500 z-50 shadow-md">
-        <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
+    <header class="fixed w-full bg-gray-500 z-50 shadow-md px-2 sm:px-4">
+        <nav class="container mx-auto py-2 sm:py-3 flex justify-between items-center">
             <div class="flex items-center gap-2 cursor-pointer" onclick="toggleCartModal()">
                 <span class="text-xl">🛒</span>
                 <span id="cart-count" class="font-bold">0</span>
@@ -63,10 +85,13 @@
 
     <!-- Модальное окно товара -->
     <div id="product-modal" class="fixed inset-0 modal-overlay hidden">
-        <div class="flex items-center justify-center min-h-screen">
+        <div class="flex items-center justify-center min-h-screen p-2">
             <div class="bg-white w-full max-w-4xl mx-4 rounded-lg overflow-hidden relative">
-                <button onclick="closeProductModal()" class="modal-close-btn absolute top-4 right-4 text-2xl p-2 z-50">×</button>
-                <div class="flex">
+                <button onclick="closeProductModal()" 
+                        class="modal-close-btn absolute top-2 right-2 sm:top-4 sm:right-4 text-xl sm:text-2xl p-1 sm:p-2 z-50">
+                    ×
+                </button>
+                <div class="flex flex-col sm:flex-row product-modal-inner">
                     <div class="w-1/2 bg-gray-100 p-6">
                         <img id="modal-image" src="" alt="" class="w-full h-96 object-contain">
                     </div>
