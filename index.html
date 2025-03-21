@@ -6,56 +6,29 @@
     <title>WhyNotClothes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Исправление анимации закрытия */
         .modal-overlay {
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(3px);
         }
         .notification {
-            animation: slideIn 0.3s ease-out;
+            animation: slideInRight 0.3s ease-out, fadeOut 1s ease-in 2s forwards;
+            right: 20px;
+            top: 70px;
         }
-        @keyframes slideIn {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
+        @keyframes slideInRight {
+            from { 
+                transform: translateX(100%); 
+                opacity: 0;
+            }
+            to { 
+                transform: translateX(0); 
+                opacity: 1;
+            }
         }
-        .modal-close-btn {
-            transition: all 0.3s;
-            cursor: pointer;
-            transform-origin: center;
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
-        .modal-close-btn:hover {
-            
-            opacity: 3;
-        }
-
-        /* Улучшение видимости выбранного размера */
-        .size-selected {
-            background-color: #2d2d2d !important;
-            color: white !important;
-            border: 2px solid black;
-        }
-        @media (max-width: 640px) {
-        .product-modal-inner {
-            flex-direction: column;
-            height: 90vh;
-        }
-        
-        .modal-close-btn {
-            top: 10px;
-            right: 10px;
-            font-size: 1.5rem;
-        }
-        
-        .product-image-section,
-        .product-info-section {
-            width: 100% !important;
-            height: 50%;
-        }
-        
-        .product-title {
-            font-size: 1.5rem;
-        }
-    }
     </style>
 </head>
 <body class="bg-white text-black">
@@ -66,49 +39,53 @@
                 <span class="text-xl">🛒</span>
                 <span id="cart-count" class="font-bold">0</span>
             </div>
-            <h1 class="text-2xl font-bold">WhyNotClothes</h1>
-            <button onclick="toggleCartModal()" class="bg-black text-white px-4 py-2 rounded-lg">
+            <h1 class="text-xl sm:text-2xl font-bold">WhyNotClothes</h1>
+            <button onclick="toggleCartModal()" class="bg-black text-white px-3 sm:px-4 py-1 sm:py-2 rounded-lg text-sm sm:text-base">
                 Checkout
             </button>
         </nav>
     </header>
 
     <!-- Основной контент -->
-    <main class="pt-20 pb-10 container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6" id="products-grid"></div>
+    <main class="pt-16 sm:pt-20 pb-10 container mx-auto px-2 sm:px-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4" id="products-grid"></div>
     </main>
 
+
     <!-- Уведомление -->
-    <div id="notification" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-black text-white px-6 py-3 rounded-lg notification hidden">
-        Ваш товар добавлен в корзину!
-    </div>
+    <div id="notification" 
+    class="fixed z-[999] hidden bg-black text-white px-6 py-3 rounded-lg notification">
+   Ваш товар добавлен в корзину!
+</div>
 
     <!-- Модальное окно товара -->
-    <div id="product-modal" class="fixed inset-0 modal-overlay hidden">
-        <div class="flex items-center justify-center min-h-screen p-2">
-            <div class="bg-white w-full max-w-4xl mx-4 rounded-lg overflow-hidden relative">
-                <button onclick="closeProductModal()" 
-                        class="modal-close-btn absolute top-2 right-2 sm:top-4 sm:right-4 text-xl sm:text-2xl p-1 sm:p-2 z-50">
-                    ×
-                </button>
-                <div class="flex flex-col sm:flex-row product-modal-inner">
-                    <div class="w-1/2 bg-gray-100 p-6">
-                        <img id="modal-image" src="" alt="" class="w-full h-96 object-contain">
-                    </div>
-                    <div class="w-1/2 p-6 flex flex-col justify-between">
-                        <div>
-                            <h2 id="modal-title" class="text-3xl font-bold mb-2"></h2>
-                            <p id="modal-price" class="text-2xl mb-4"></p>
-                            <div class="mb-6">
-                                <label class="block text-sm font-bold mb-2">Размер:</label>
-                                <div id="size-buttons" class="flex flex-wrap gap-2"></div>
-                            </div>
-                            <p id="modal-details" class="text-sm text-gray-600"></p>
+    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-2" onclick="event.target === this && closeProductModal()">
+            <div class="bg-white w-full max-w-4xl rounded-lg overflow-hidden relative flex flex-col md:flex-row">
+                <button onclick="closeProductModal()" class="absolute top-2 right-2 text-3xl z-50">×</button>
+                
+                <div class="w-full md:w-1/2 bg-gray-100 p-4 flex items-center justify-center">
+                    <img id="modal-image" src="" alt="" class="object-contain max-h-[300px] md:max-h-[500px]">
+                </div>
+
+                <div class="w-full md:w-1/2 p-4 flex flex-col justify-between">
+                    <div>
+                        <div class="mb-4 space-y-2">
+                            <h2 id="modal-title" class="text-xl md:text-3xl font-bold break-words"></h2>
+                            <p id="modal-price" class="text-lg md:text-2xl font-semibold"></p>
                         </div>
-                        <button onclick="addToCart()" class="bg-black text-white w-full py-3 rounded-lg mt-4">
-                            Добавить в корзину
-                        </button>
+
+                        <div class="mb-4">
+                            <label class="block text-sm md:text-base font-medium mb-2">Размер:</label>
+                            <div id="size-buttons" class="flex flex-wrap gap-2"></div>
+                        </div>
+
+                        <p id="modal-details" class="text-sm md:text-base text-gray-600"></p>
                     </div>
+
+                    <button onclick="addToCart()" class="mt-4 bg-black text-white w-full py-2 md:py-3 rounded-lg text-base md:text-lg">
+                        Добавить в корзину
+                    </button>
                 </div>
             </div>
         </div>
@@ -116,12 +93,12 @@
 
     <!-- Модальное окно корзины -->
     <div id="cart-modal" class="fixed inset-0 modal-overlay hidden">
-        <div class="flex items-center justify-center min-h-screen">
+        <div class="flex items-center justify-center min-h-screen" onclick="event.target === this && toggleCartModal()">
             <div class="bg-white w-full max-w-2xl mx-4 rounded-lg">
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold">Корзина</h2>
-                        <button onclick="toggleCartModal()" class="modal-close-btn text-2xl p-2">×</button>
+                        <button onclick="toggleCartModal()" class="text-2xl p-2">×</button>
                     </div>
                     <div id="cart-items" class="mb-6 max-h-96 overflow-y-auto"></div>
                     <div class="border-t pt-4">
@@ -143,12 +120,12 @@
 
     <!-- Модальное окно оформления -->
     <div id="checkout-modal" class="fixed inset-0 modal-overlay hidden">
-        <div class="flex items-center justify-center min-h-screen">
+        <div class="flex items-center justify-center min-h-screen" onclick="event.target === this && toggleCheckoutModal()">
             <div class="bg-white w-full max-w-2xl mx-4 rounded-lg">
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold">Оформление заказа</h2>
-                        <button onclick="toggleCheckoutModal()" class="modal-close-btn text-2xl p-2">×</button>
+                        <button onclick="toggleCheckoutModal()" class="text-2xl p-2">×</button>
                     </div>
                     <form id="order-form" onsubmit="submitOrder(event)">
                         <div class="mb-6">
@@ -188,6 +165,299 @@
             </div>
         </div>
     </div>
-       <script src="script.js"></script>
+
+    <script>
+        const products = [
+            { 
+                id: 1, 
+                title: 'Футболка Oversize', 
+                price: 1490, 
+                image: 'https://via.placeholder.com/400x500', 
+                sizes: ['S', 'M', 'L', 'XL'], 
+                details: '100% хлопок, свободный крой' 
+            },
+            { 
+                id: 2, 
+                title: 'Худи с капюшоном', 
+                price: 3490, 
+                image: 'https://via.placeholder.com/400x500?text=Hoodie', 
+                sizes: ['M', 'L', 'XL'], 
+                details: 'Флисовая подкладка, карман кенгуру' 
+            },
+            { 
+                id: 3, 
+                title: 'Скинни джинсы', 
+                price: 2990, 
+                image: 'https://via.placeholder.com/400x500?text=Jeans', 
+                sizes: ['28', '30', '32', '34'], 
+                details: 'Ультра-стрейч, 98% хлопок' 
+            },
+            { 
+                id: 4, 
+                title: 'Кожаная косуха', 
+                price: 8990, 
+                image: 'https://via.placeholder.com/400x500?text=Jacket', 
+                sizes: ['S', 'M', 'L'], 
+                details: 'Натуральная кожа, кнопки' 
+            },
+            { 
+                id: 5, 
+                title: 'Платье-миди', 
+                price: 2590, 
+                image: 'https://via.placeholder.com/400x500?text=Dress', 
+                sizes: ['XS', 'S', 'M'], 
+                details: 'Хлопковый трикотаж, пояс на талии' 
+            },
+            { 
+                id: 6, 
+                title: 'Кардиган крупной вязки', 
+                price: 2790, 
+                image: 'https://via.placeholder.com/400x500?text=Cardigan', 
+                sizes: ['S', 'M', 'L'], 
+                details: 'Объемный силуэт, шерсть 70%' 
+            },
+            { 
+                id: 7, 
+                title: 'Бомбер', 
+                price: 4290, 
+                image: 'бомбер.jpg', 
+                sizes: ['M', 'L', 'XL'], 
+                details: 'Нейлоновая ткань, светоотражающие элементы' 
+            },
+            { 
+                id: 8, 
+                title: 'Юбка-карандаш', 
+                price: 1990, 
+                image: 'https://via.placeholder.com/400x500?text=Skirt', 
+                sizes: ['S', 'M', 'L'], 
+                details: 'Классическая длина до колена' 
+            },
+            { 
+                id: 9, 
+                title: 'Рубашка оверсайз', 
+                price: 2290, 
+                image: 'https://via.placeholder.com/400x500?text=Shirt', 
+                sizes: ['S', 'M', 'L'], 
+                details: 'Хлопок 100%, свободный крой' 
+            },
+            { 
+                id: 10, 
+                title: 'Спортивные шорты', 
+                price: 1590, 
+                image: 'https://via.placeholder.com/400x500?text=Shorts', 
+                sizes: ['S', 'M', 'L'], 
+                details: 'Быстросохнущий материал' 
+            },
+            { 
+                id: 11, 
+                title: 'Ветровка', 
+                price: 3690, 
+                image: 'https://via.placeholder.com/400x500?text=Windbreaker', 
+                sizes: ['S', 'M', 'L'], 
+                details: 'Водоотталкивающая ткань' 
+            },
+            { 
+                id: 12, 
+                title: 'Комбинезон', 
+                price: 4990, 
+                image: 'https://via.placeholder.com/400x500?text=Jumpsuit', 
+                sizes: ['XS', 'S', 'M'], 
+                details: 'Хлопковый деним, регулируемый пояс' 
+            }
+        ];
+
+        let cart = [];
+        let selectedProduct = null;
+        let selectedSize = null;
+
+        function init() {
+            renderProducts();
+            updateCartCount();
+        }
+
+        
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = products.map(product => `
+                <div class="cursor-pointer group" onclick="openProductModal(${product.id})">
+                    <div class="relative overflow-hidden rounded-lg aspect-square">
+                        <img src="${product.image}" alt="${product.title}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="mt-2">
+                        <h3 class="font-semibold text-sm sm:text-base">${product.title}</h3>
+                        <p class="text-gray-600 text-sm sm:text-base">${product.price}₽</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+
+        function openProductModal(productId) {
+            selectedProduct = products.find(p => p.id === productId);
+            selectedSize = null;
+            
+            document.getElementById('modal-title').textContent = selectedProduct.title;
+            document.getElementById('modal-price').textContent = `${selectedProduct.price}₽`;
+            document.getElementById('modal-image').src = selectedProduct.image;
+            document.getElementById('modal-details').textContent = selectedProduct.details;
+            
+            const sizeButtons = document.getElementById('size-buttons');
+            sizeButtons.innerHTML = selectedProduct.sizes.map(size => `
+                <button onclick="selectSize('${size}')" 
+                        class="px-4 py-2 rounded-lg border-2 transition-all
+                        ${
+                            selectedSize === size 
+                            ? 'bg-black text-white border-black' 
+                            : 'bg-white text-black border-gray-300 hover:border-black'
+                        }">
+                    ${size}
+                </button>
+            `).join('');
+            
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function selectSize(size) {
+            selectedSize = size;
+            document.querySelectorAll('#size-buttons button').forEach(btn => {
+                const isSelected = btn.textContent.trim() === size;
+                btn.classList.toggle('bg-black', isSelected);
+                btn.classList.toggle('text-white', isSelected);
+            });
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+            selectedProduct = null;
+            selectedSize = null;
+        }
+
+        function addToCart() {
+            if (!selectedSize) {
+                alert('Выберите размер!');
+                return;
+            }
+            const existing = cart.find(item => 
+                item.id === selectedProduct.id && item.size === selectedSize
+            );
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({
+                    ...selectedProduct,
+                    size: selectedSize,
+                    quantity: 1
+                });
+            }
+            showNotification();
+            updateCart();
+            closeProductModal();
+        }
+
+        function updateCart() {
+            document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = cart.length ? cart.map(item => `
+                <div class="flex items-center justify-between py-3 border-b">
+                    <div class="flex items-center gap-4">
+                        <img src="${item.image}" class="w-16 h-16 object-cover rounded">
+                        <div>
+                            <h4 class="font-semibold">${item.title}</h4>
+                            <p class="text-sm">Размер: ${item.size}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="changeQuantity(${item.id}, '${item.size}', -1)" 
+                                class="px-3 py-1 bg-gray-100 rounded">-</button>
+                        <span>${item.quantity}</span>
+                        <button onclick="changeQuantity(${item.id}, '${item.size}', 1)" 
+                                class="px-3 py-1 bg-gray-100 rounded">+</button>
+                        <button onclick="removeItem(${item.id}, '${item.size}')" 
+                                class="text-red-500 ml-2">×</button>
+                    </div>
+                    <p class="font-semibold">${item.price * item.quantity}₽</p>
+                </div>
+            `).join('') : '<p class="text-gray-500">Корзина пуста</p>';
+            document.getElementById('cart-total').textContent = `${calculateTotal()}₽`;
+        }
+
+        function calculateTotal() {
+            return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        }
+
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('hidden');
+            
+            // Сбрасываем анимацию
+            notification.style.animation = 'none';
+            setTimeout(() => {
+                notification.style.animation = '';
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 2500);
+        }
+
+        function toggleCartModal() {
+            document.getElementById('cart-modal').classList.toggle('hidden');
+        }
+
+        function toggleCheckoutModal() {
+            document.getElementById('checkout-modal').classList.toggle('hidden');
+        }
+
+        function changeQuantity(id, size, delta) {
+            const item = cart.find(item => item.id === id && item.size === size);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i !== item);
+                }
+                updateCart();
+            }
+        }
+
+        function removeItem(id, size) {
+            cart = cart.filter(item => !(item.id === id && item.size === size));
+            updateCart();
+        }
+
+        async function submitOrder(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const order = {
+                name: formData.get('name'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                delivery: formData.get('delivery'),
+                payment: formData.get('payment'),
+                cart: cart,
+                total: calculateTotal()
+            };
+            
+            const botToken = 'ВАШ_ТОКЕН_БОТА';
+            const chatId = 'ВАШ_CHAT_ID';
+            const text = `Новый заказ!\n${JSON.stringify(order, null, 2)}`;
+
+            try {
+                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: chatId, text })
+                });
+                alert('Заказ успешно оформлен!');
+                cart = [];
+                updateCart();
+                toggleCheckoutModal();
+            } catch (error) {
+                alert('Ошибка оформления заказа');
+            }
+        }
+
+        window.onload = init;
+    </script>
 </body>
 </html>
