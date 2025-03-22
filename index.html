@@ -135,23 +135,35 @@
                             <input type="tel" name="phone" placeholder="Телефон" required 
                                    class="w-full border p-2 mb-3 rounded">
                             <input type="email" name="email" placeholder="Email" required 
+                                   class="w-full border p-2 mb-3 rounded">
+                            <input type="text" name="telegram" placeholder="Телеграмм (опционально)" 
                                    class="w-full border p-2 rounded">
                         </div>
                         <div class="mb-6">
                             <h3 class="text-lg font-bold mb-4">Доставка</h3>
-                            <select name="delivery" id="delivery-type" class="w-full border p-2 rounded mb-3">
-                                <option value="pickup">Самовывоз (бесплатно)</option>
-                                <option value="courier">Курьер (+500₽)</option>
-                            </select>
-                            <div id="delivery-info" class="text-sm text-gray-600"></div>
+                            <div class="flex flex-col gap-3">
+                                <label>
+                                    <input type="radio" name="delivery" value="pickup" required>
+                                    Самовывоз (бесплатно)
+                                </label>
+                                <label>
+                                    <input type="radio" name="delivery" value="courier" required>
+                                    Курьер (+500₽)
+                                </label>
+                            </div>
                         </div>
                         <div class="mb-6">
                             <h3 class="text-lg font-bold mb-4">Способ оплаты</h3>
-                            <select name="payment" class="w-full border p-2 rounded">
-                                <option value="card">Картой онлайн</option>
-                                <option value="cash">Наличными при получении</option>
-                                <option value="parts">Долями</option>
-                            </select>
+                            <div class="flex flex-col gap-3">
+                                <label>
+                                    <input type="radio" name="payment" value="card" required>
+                                    Картой онлайн
+                                </label>
+                                <label>
+                                    <input type="radio" name="payment" value="cash" required>
+                                    Наложенный платеж
+                                </label>
+                            </div>
                         </div>
                         <label class="flex items-center gap-2 mb-6">
                             <input type="checkbox" required class="w-4 h-4">
@@ -165,6 +177,8 @@
             </div>
         </div>
     </div>
+    
+    
 
     <script>
         const products = [
@@ -426,36 +440,51 @@
         }
 
         async function submitOrder(e) {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const order = {
-                name: formData.get('name'),
-                phone: formData.get('phone'),
-                email: formData.get('email'),
-                delivery: formData.get('delivery'),
-                payment: formData.get('payment'),
-                cart: cart,
-                total: calculateTotal()
-            };
-            
-            const botToken = 'ВАШ_ТОКЕН_БОТА';
-            const chatId = 'ВАШ_CHAT_ID';
-            const text = `Новый заказ!\n${JSON.stringify(order, null, 2)}`;
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    
+    // Сопоставляем id с текстом для доставки и оплаты
+    const deliveryText = formData.get('delivery') === 'pickup' ? 'Самовывоз (бесплатно)' :
+                         formData.get('delivery') === 'courier' ? 'Курьер (+500₽)' : 'Неизвестно';
+    
+    const paymentText = formData.get('payment') === 'card' ? 'Картой онлайн' :
+                        formData.get('payment') === 'cash' ? 'Наложенный платеж' : 'Неизвестно';
 
-            try {
-                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: chatId, text })
-                });
-                alert('Заказ успешно оформлен!');
-                cart = [];
-                updateCart();
-                toggleCheckoutModal();
-            } catch (error) {
-                alert('Ошибка оформления заказа');
-            }
-        }
+    const order = {
+        name: formData.get('name'),
+        phone: formData.get('phone'),
+        email: formData.get('email'),
+        telegram: formData.get('telegram'),
+        delivery: deliveryText,
+        payment: paymentText,
+        cart: cart,
+        total: calculateTotal()
+    };
+
+    const botToken = '8102485605:AAHQH0ePYCpdASisEaRKOdMUG6vdgRtBR0s';
+    const chatId = '1778273361';
+
+    // Формируем сообщение для Telegram с текстами доставки и оплаты
+    const text = `Новый заказ!\nИмя: ${order.name}\nТелефон: ${order.phone}\nEmail: ${order.email}\nТелеграм: ${order.telegram}\nДоставка: ${order.delivery}\nОплата: ${order.payment}\n\nТовары:\n` +
+                 order.cart.map(item => `${item.title} (Размер: ${item.size}) - ${item.quantity} шт. (${item.price * item.quantity}₽)`).join('\n') +
+                 `\n\nИтого: ${order.total}₽`;
+
+    try {
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: chatId, text })
+        });
+        alert('Заказ успешно оформлен!');
+        cart = [];  // Очистить корзину
+        updateCart();  // Обновить отображение корзины
+        toggleCheckoutModal();  // Закрыть модальное окно
+    } catch (error) {
+        alert('Ошибка оформления заказа');
+    }
+}
+
+
 
         window.onload = init;
     </script>
