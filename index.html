@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhyNotClothes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        body {
+            padding-top: 60px;
+        }
+        header {
+            top: 0;
+            left: 0;
+        }
         .modal-overlay {
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(3px);
@@ -16,47 +24,110 @@
             top: 70px;
         }
         @keyframes slideInRight {
-            from { 
-                transform: translateX(100%); 
-                opacity: 0;
-            }
-            to { 
-                transform: translateX(0); 
-                opacity: 1;
-            }
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
         @keyframes fadeOut {
             from { opacity: 1; }
             to { opacity: 0; }
         }
+        .group:hover img {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+        /* Стиль для выбранного размера */
+        .size-selected {
+            border: 2px solid black !important;
+            background-color: white !important;
+            color: black !important;
+        }
+        .product-card-image {
+            aspect-ratio: 2/3;
+            height: auto;
+        }
+        /* Стили для бургер-меню */
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+    
+    /* Анимация мобильного меню */
+    .mobile-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+    .mobile-menu.open {
+        max-height: 200px;
+    }
+    
+   
     </style>
 </head>
 <body class="bg-white text-black">
     <!-- Навигация -->
-    <header class="fixed w-full bg-gray-500 z-50 shadow-md px-2 sm:px-4">
-        <nav class="container mx-auto py-2 sm:py-3 flex justify-between items-center">
-            <div class="flex items-center gap-2 cursor-pointer" onclick="toggleCartModal()">
-                <span class="text-xl">🛒</span>
-                <span id="cart-count" class="font-bold">0</span>
+    <header class="fixed w-full bg-gray-500/25 z-50 shadow-md px-2 sm:px-4 backdrop-blur-sm">
+    <div class="container mx-auto px-4">
+        <nav class="flex justify-between items-center py-3">
+            <!-- Логотип -->
+            <a href="#" class="text-xl font-bold">WhyNotClothes</a>
+            
+            <!-- Десктопное меню -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#" class="hover:text-gray-600 transition">Каталог</a>
+                <a href="#" class="hover:text-gray-600 transition">О нас</a>
+                <a href="#" class="hover:text-gray-600 transition">Контакты</a>
+                <button onclick="toggleCartModal()" class="relative ml-4">
+                    <i class="fas fa-shopping-cart text-lg"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
             </div>
-            <h1 class="text-xl sm:text-2xl font-bold">WhyNotClothes</h1>
-            <button onclick="toggleCartModal()" class="bg-black text-white px-3 sm:px-4 py-1 sm:py-2 rounded-lg text-sm sm:text-base">
-                Checkout
-            </button>
+            
+            <!-- Мобильное меню (бургер) -->
+            <div class="md:hidden flex items-center ">
+                <button onclick="toggleCartModal()" class="relative mr-4">
+                    <i class="fas fa-shopping-cart text-lg"></i>
+                    <span id="cart-count-mobile" class="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
+                <button id="hamburger" class="hamburger flex flex-col justify-between h-5 w-6">
+                    <span class="block w-full h-0.5 bg-black transition-transform"></span>
+                    <span class="block w-full h-0.5 bg-black transition-opacity"></span>
+                    <span class="block w-full h-0.5 bg-black transition-transform"></span>
+                </button>
+            </div>
         </nav>
-    </header>
+        
+        <!-- Мобильное меню (контент) -->
+        <div id="mobile-menu" class="mobile-menu md:hidden bg-white/95 backdrop-blur-sm">
+            <div class="flex flex-col space-y-3 py-3">
+                <a href="#" class="py-2 hover:text-gray-600 transition">Каталог</a>
+                <a href="#" class="py-2 hover:text-gray-600 transition">О нас</a>
+                <a href="#" class="py-2 hover:text-gray-600 transition">Контакты</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <!-- Баннер -->
+    <div class="w-full h-64 sm:h-80 md:h-96 bg-gray-200">
+        <img src="с2.JPG" 
+             alt="Баннер" class="w-full h-full object-cover">
+    </div>
 
     <!-- Основной контент -->
-    <main class="pt-16 sm:pt-20 pb-10 container mx-auto px-2 sm:px-4">
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4" id="products-grid"></div>
+    <main class="pb-10 container mx-auto px-2 sm:px-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5" id="products-grid"></div>
     </main>
 
-
     <!-- Уведомление -->
-    <div id="notification" 
-    class="fixed z-[999] hidden bg-black text-white px-6 py-3 rounded-lg notification">
-   Ваш товар добавлен в корзину!
-</div>
+    <div id="notification" class="fixed z-[999] hidden bg-black text-white px-6 py-3 rounded-lg notification">
+        Ваш товар добавлен в корзину!
+    </div>
 
     <!-- Модальное окно товара -->
     <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
@@ -64,8 +135,8 @@
             <div class="bg-white w-full max-w-4xl rounded-lg overflow-hidden relative flex flex-col md:flex-row">
                 <button onclick="closeProductModal()" class="absolute top-2 right-2 text-3xl z-50">×</button>
                 
-                <div class="w-full md:w-1/2 bg-gray-100 p-4 flex items-center justify-center">
-                    <img id="modal-image" src="" alt="" class="object-contain max-h-[300px] md:max-h-[500px]">
+                <div class="w-full md:w-1/2 bg-gray-100 p-4 flex flex-col items-center justify-center modal-image-container">
+                    <!-- Сюда будут вставлены изображения через JS -->
                 </div>
 
                 <div class="w-full md:w-1/2 p-4 flex flex-col justify-between">
@@ -142,11 +213,11 @@
                         <div class="mb-6">
                             <h3 class="text-lg font-bold mb-4">Доставка</h3>
                             <div class="flex flex-col gap-3">
-                                <label>
+                                <label class="flex items-center gap-2">
                                     <input type="radio" name="delivery" value="pickup" required>
                                     Самовывоз (бесплатно)
                                 </label>
-                                <label>
+                                <label class="flex items-center gap-2">
                                     <input type="radio" name="delivery" value="courier" required>
                                     Курьер (+500₽)
                                 </label>
@@ -155,11 +226,11 @@
                         <div class="mb-6">
                             <h3 class="text-lg font-bold mb-4">Способ оплаты</h3>
                             <div class="flex flex-col gap-3">
-                                <label>
+                                <label class="flex items-center gap-2">
                                     <input type="radio" name="payment" value="card" required>
                                     Картой онлайн
                                 </label>
-                                <label>
+                                <label class="flex items-center gap-2">
                                     <input type="radio" name="payment" value="cash" required>
                                     Наложенный платеж
                                 </label>
@@ -178,105 +249,283 @@
         </div>
     </div>
     
-    
+    <!-- Footer -->
+    <footer class="bg-black text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h2 class="text-2xl font-bold">WHYNOT</h2>
+                    <p class="text-gray-400">Одежда, в которой ты говоришь миру: «Я — это я»</p>
+                </div>
+                <div class="flex gap-4 text-xl">
+                    <a href="https://vk.com/whynotclothing" target="_blank" rel="noopener noreferrer" class="hover:text-gray-400 transition">
+                        <i class="fab fa-vk"></i>
+                    </a>
+                    <a href="https://t.me/whynotclothing" target="_blank" rel="noopener noreferrer" class="hover:text-gray-400 transition">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <a href="https://www.instagram.com/whynot_clothingg/" target="_blank" rel="noopener noreferrer" class="hover:text-gray-400 transition">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-gray-400 text-sm">
+                © 2023 WhyNotClothes. Все права защищены.
+            </div>
+        </div>
+    </footer>
 
     <script>
+         // Массив товаров с 5 оттенками для каждой категории
         const products = [
+            // Футболки (5 оттенков)
             { 
                 id: 1, 
-                title: 'Футболка Oversize', 
+                title: 'Футболка Classic White', 
                 price: 1490, 
-                image: 'https://via.placeholder.com/400x500', 
-                sizes: ['S', 'M', 'L', 'XL'], 
-                details: '100% хлопок, свободный крой' 
+                images: [
+                    'футболкамоделбел.jpg',
+                    'https://via.placeholder.com/400x500/F5F5F5/000000?text=White+Back',
+                    'https://via.placeholder.com/400x500/F5F5F5/000000?text=White+Detail'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: '100% хлопок, классический крой' 
             },
             { 
                 id: 2, 
-                title: 'Худи с капюшоном', 
-                price: 3490, 
-                image: 'https://via.placeholder.com/400x500?text=Hoodie', 
-                sizes: ['M', 'L', 'XL'], 
-                details: 'Флисовая подкладка, карман кенгуру' 
+                title: 'Футболка Midnight Black', 
+                price: 1490, 
+                images: [
+                    'футболкамоделчерн.jpg',
+                    'https://via.placeholder.com/400x500/000000/FFFFFF?text=Black+Back',
+                    'https://via.placeholder.com/400x500/000000/FFFFFF?text=Black+Detail'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: '100% хлопок, классический крой' 
             },
             { 
                 id: 3, 
-                title: 'Скинни джинсы', 
-                price: 2990, 
-                image: 'https://via.placeholder.com/400x500?text=Jeans', 
-                sizes: ['28', '30', '32', '34'], 
-                details: 'Ультра-стрейч, 98% хлопок' 
+                title: 'Футболка Sky Blue', 
+                price: 1490, 
+                images: [
+                    'футболкамоделсин.jpg',
+                    'https://via.placeholder.com/400x500/87CEEB/000000?text=Blue+Back',
+                    'https://via.placeholder.com/400x500/87CEEB/000000?text=Blue+Detail'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: '100% хлопок, классический крой' 
             },
             { 
                 id: 4, 
-                title: 'Кожаная косуха', 
-                price: 8990, 
-                image: 'https://via.placeholder.com/400x500?text=Jacket', 
-                sizes: ['S', 'M', 'L'], 
-                details: 'Натуральная кожа, кнопки' 
+                title: 'Футболка Brick Red', 
+                price: 1490, 
+                images: [
+                    'футболкамоделроз.jpg',
+                    'https://via.placeholder.com/400x500/CB4154/FFFFFF?text=Red+Back',
+                    'https://via.placeholder.com/400x500/CB4154/FFFFFF?text=Red+Detail'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: '100% хлопок, классический крой' 
             },
             { 
                 id: 5, 
-                title: 'Платье-миди', 
-                price: 2590, 
-                image: 'https://via.placeholder.com/400x500?text=Dress', 
-                sizes: ['XS', 'S', 'M'], 
-                details: 'Хлопковый трикотаж, пояс на талии' 
+                title: 'Футболка Olive Green', 
+                price: 1490, 
+                images: [
+                    'футболкамоделзелен.jpg',
+                    'https://via.placeholder.com/400x500/808000/FFFFFF?text=Green+Back',
+                    'https://via.placeholder.com/400x500/808000/FFFFFF?text=Green+Detail'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: '100% хлопок, классический крой' 
             },
+            
+            // Лонгсливы (5 оттенков)
             { 
                 id: 6, 
-                title: 'Кардиган крупной вязки', 
-                price: 2790, 
-                image: 'https://via.placeholder.com/400x500?text=Cardigan', 
-                sizes: ['S', 'M', 'L'], 
-                details: 'Объемный силуэт, шерсть 70%' 
+                title: 'Лонгслив White', 
+                price: 2490, 
+                images: [
+                    'Модель-белый.JPG',
+                    'б1.JPG',
+                    'б2.JPG'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Хлопок 95%, эластан 5%, утепленный' 
             },
             { 
                 id: 7, 
-                title: 'Бомбер', 
-                price: 4290, 
-                image: 'бомбер.jpg', 
-                sizes: ['M', 'L', 'XL'], 
-                details: 'Нейлоновая ткань, светоотражающие элементы' 
+                title: 'Лонгслив Blue', 
+                price: 2490, 
+                images: [
+                    'Модель-синий.jpg',
+                    'с1.JPG',
+                    'с2.JPG',
+                    'с3.JPG',
+                    'с4.JPG'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Хлопок 95%, эластан 5%, утепленный' 
             },
             { 
                 id: 8, 
-                title: 'Юбка-карандаш', 
-                price: 1990, 
-                image: 'https://via.placeholder.com/400x500?text=Skirt', 
-                sizes: ['S', 'M', 'L'], 
-                details: 'Классическая длина до колена' 
+                title: 'Лонгслив Pink', 
+                price: 2490, 
+                images: [
+                    'Модель Розовый.jpg',
+                    'р1.JPG',
+                    'р2.JPG'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Хлопок 95%, эластан 5%, утепленный' 
             },
             { 
                 id: 9, 
-                title: 'Рубашка оверсайз', 
-                price: 2290, 
-                image: 'https://via.placeholder.com/400x500?text=Shirt', 
-                sizes: ['S', 'M', 'L'], 
-                details: 'Хлопок 100%, свободный крой' 
+                title: 'Лонгслив Black', 
+                price: 2490, 
+                images: [
+                    'Модель-черный.jpg',
+                    'https://via.placeholder.com/400x500/800020/FFFFFF?text=Burgundy+Back',
+                    'https://via.placeholder.com/400x500/800020/FFFFFF?text=Burgundy+Detail'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Хлопок 95%, эластан 5%, утепленный' 
             },
             { 
                 id: 10, 
-                title: 'Спортивные шорты', 
-                price: 1590, 
-                image: 'https://via.placeholder.com/400x500?text=Shorts', 
-                sizes: ['S', 'M', 'L'], 
-                details: 'Быстросохнущий материал' 
+                title: 'Лонгслив Green', 
+                price: 2490, 
+                images: [
+                    'Модель-зеленый.jpg',
+                    'https://via.placeholder.com/400x500/36454F/FFFFFF?text=Charcoal+Back',
+                    'https://via.placeholder.com/400x500/36454F/FFFFFF?text=Charcoal+Detail'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Хлопок 95%, эластан 5%, утепленный' 
             },
+            
+            // Спортивные штаны (5 оттенков)
             { 
                 id: 11, 
-                title: 'Ветровка', 
-                price: 3690, 
-                image: 'https://via.placeholder.com/400x500?text=Windbreaker', 
-                sizes: ['S', 'M', 'L'], 
-                details: 'Водоотталкивающая ткань' 
+                title: 'Спортштаны Black', 
+                price: 2990, 
+                images: [
+                    'модель черный.jpg',
+                    'https://via.placeholder.com/400x500/383838/FFFFFF?text=Graphite+Back',
+                    'https://via.placeholder.com/400x500/383838/FFFFFF?text=Graphite+Detail'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Полиэстер 80%, хлопок 20%, эластичный пояс' 
             },
             { 
                 id: 12, 
-                title: 'Комбинезон', 
-                price: 4990, 
-                image: 'https://via.placeholder.com/400x500?text=Jumpsuit', 
-                sizes: ['XS', 'S', 'M'], 
-                details: 'Хлопковый деним, регулируемый пояс' 
+                title: 'Спортштаны Green', 
+                price: 2990, 
+                images: [
+                    'модельзелен.jpg',
+                    'https://via.placeholder.com/400x500/013220/FFFFFF?text=Dark+Green+Back',
+                    'https://via.placeholder.com/400x500/013220/FFFFFF?text=Dark+Green+Detail'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Полиэстер 80%, хлопок 20%, эластичный пояс' 
+            },
+            { 
+                id: 13, 
+                title: 'Спортштаны Blue', 
+                price: 2990, 
+                images: [
+                    'модельсин.jpg',
+                    'https://via.placeholder.com/400x500/4682B4/FFFFFF?text=Steel+Blue+Back',
+                    'https://via.placeholder.com/400x500/4682B4/FFFFFF?text=Steel+Blue+Detail'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Полиэстер 80%, хлопок 20%, эластичный пояс' 
+            },
+            { 
+                id: 14, 
+                title: 'Спортштаны White', 
+                price: 2990, 
+                images: [
+                    'модельбелый.jpg',
+                    'https://via.placeholder.com/400x500/B2BEB5/000000?text=Ash+Grey+Back',
+                    'https://via.placeholder.com/400x500/B2BEB5/000000?text=Ash+Grey+Detail'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Полиэстер 80%, хлопок 20%, эластичный пояс' 
+            },
+            { 
+                id: 15, 
+                title: 'Спортштаны Pink', 
+                price: 3290, 
+                images: [
+                    'модель роз.jpg',
+                    'розовые.jpg',
+                    'https://via.placeholder.com/400x500/000000/FFFFFF?text=Black+Camo+Detail'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Полиэстер 80%, хлопок 20%, камуфляжный принт' 
+            },
+            
+            // Комплекты (5 оттенков)
+            { 
+                id: 16, 
+                title: 'Комплект Grey Set', 
+                price: 4490, 
+                images: [
+                    'komplektmodelcern.JPG',
+                    'komplektcern.JPG',
+                    'komplektcern2.JPG'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Футболка + штаны, хлопок 100%' 
+            },
+            { 
+                id: 17, 
+                title: 'Комплект Blue Set', 
+                price: 4490, 
+                images: [
+                    'komplektmodelsin.JPG',
+                    'komplektsin.JPG',
+                    'komplektsin2.JPG'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Футболка + штаны, хлопок 100%' 
+            },
+            { 
+                id: 18, 
+                title: 'Комплект Pink Set', 
+                price: 4490, 
+                images: [
+                    'komplektmodelpink.jpg',
+                    'komplektpink.JPG',
+                    'komplektpink2.JPG'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Футболка + штаны, хлопок 100%' 
+            },
+            { 
+                id: 19, 
+                title: 'Комплект Army Set', 
+                price: 4790, 
+                images: [
+                    'komplektmodelzelen.JPG',
+                    'komplektzelen.JPG',
+                    'komplektzelen2.JPG'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Футболка + штаны, милитари стиль' 
+            },
+            { 
+                id: 20, 
+                title: 'Комплект Black Set', 
+                price: 4490, 
+                images: [
+                    'komplektmodelbel.jpg',
+                    'komplektbel.JPG',
+                    'komplektbel2.JPG'
+                ], 
+                sizes: ['XS', 'S', 'M', 'L', 'XL'], 
+                details: 'Футболка + штаны, хлопок 100%' 
             }
         ];
 
@@ -289,23 +538,21 @@
             updateCartCount();
         }
 
-        
         function renderProducts() {
             const grid = document.getElementById('products-grid');
             grid.innerHTML = products.map(product => `
                 <div class="cursor-pointer group" onclick="openProductModal(${product.id})">
-                    <div class="relative overflow-hidden rounded-lg aspect-square">
-                        <img src="${product.image}" alt="${product.title}" 
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="relative overflow-hidden rounded-lg product-card-image">
+                        <img src="${product.images[0]}" alt="${product.title}" 
+                             class="w-full h-full object-cover transition-transform duration-300">
                     </div>
-                    <div class="mt-2">
+                    <div class="mt-3">
                         <h3 class="font-semibold text-sm sm:text-base">${product.title}</h3>
                         <p class="text-gray-600 text-sm sm:text-base">${product.price}₽</p>
                     </div>
                 </div>
             `).join('');
         }
-        
 
         function openProductModal(productId) {
             selectedProduct = products.find(p => p.id === productId);
@@ -313,18 +560,27 @@
             
             document.getElementById('modal-title').textContent = selectedProduct.title;
             document.getElementById('modal-price').textContent = `${selectedProduct.price}₽`;
-            document.getElementById('modal-image').src = selectedProduct.image;
             document.getElementById('modal-details').textContent = selectedProduct.details;
+            
+            const imageContainer = document.querySelector('.modal-image-container');
+            if (imageContainer) {
+                imageContainer.innerHTML = `
+                    <div class="main-image">
+                        <img id="modal-image" src="${selectedProduct.images[0]}" alt="" class="object-contain max-h-[300px] md:max-h-[500px]">
+                    </div>
+                    <div class="thumbnails flex gap-2 mt-4">
+                        ${selectedProduct.images.map((img, index) => `
+                            <img src="${img}" alt="" class="w-16 h-16 object-cover cursor-pointer border-2 ${index === 0 ? 'border-black' : 'border-transparent'}"
+                                 onclick="changeModalImage(this, '${img}')">
+                        `).join('')}
+                    </div>
+                `;
+            }
             
             const sizeButtons = document.getElementById('size-buttons');
             sizeButtons.innerHTML = selectedProduct.sizes.map(size => `
-                <button onclick="selectSize('${size}')" 
-                        class="px-4 py-2 rounded-lg border-2 transition-all
-                        ${
-                            selectedSize === size 
-                            ? 'bg-white text-black border-black' 
-                            : 'bg-black text-white border-gray-300 hover:border-black'
-                        }">
+                <button onclick="selectSize('${size}', this)" 
+                        class="px-4 py-2 rounded-lg border-2 border-gray-300 bg-black text-white hover:border-black transition-all">
                     ${size}
                 </button>
             `).join('');
@@ -332,14 +588,27 @@
             document.getElementById('product-modal').classList.remove('hidden');
         }
 
-        function selectSize(size) {
+        function selectSize(size, button) {
             selectedSize = size;
+            // Удаляем класс у всех кнопок
             document.querySelectorAll('#size-buttons button').forEach(btn => {
-                const isSelected = btn.textContent.trim() === size;
-                btn.classList.toggle('bg-black', isSelected);
-                btn.classList.toggle('text-white', isSelected);
+                btn.classList.remove('size-selected');
+                btn.classList.add('bg-black', 'text-white');
+            });
+            // Добавляем класс только к выбранной кнопке
+            button.classList.add('size-selected');
+            button.classList.remove('bg-black', 'text-white');
+        }
+
+        function changeModalImage(thumb, imgSrc) {
+            document.getElementById('modal-image').src = imgSrc;
+            document.querySelectorAll('.thumbnails img').forEach(img => {
+                img.classList.toggle('border-black', img === thumb);
+                img.classList.toggle('border-transparent', img !== thumb);
             });
         }
+
+        
 
         function closeProductModal() {
             document.getElementById('product-modal').classList.add('hidden');
@@ -375,7 +644,7 @@
             cartItems.innerHTML = cart.length ? cart.map(item => `
                 <div class="flex items-center justify-between py-3 border-b">
                     <div class="flex items-center gap-4">
-                        <img src="${item.image}" class="w-16 h-16 object-cover rounded">
+                        <img src="${item.images[0]}" class="w-16 h-16 object-cover rounded">
                         <div>
                             <h4 class="font-semibold">${item.title}</h4>
                             <p class="text-sm">Размер: ${item.size}</p>
@@ -404,7 +673,6 @@
             const notification = document.getElementById('notification');
             notification.classList.remove('hidden');
             
-            // Сбрасываем анимацию
             notification.style.animation = 'none';
             setTimeout(() => {
                 notification.style.animation = '';
@@ -417,6 +685,9 @@
 
         function toggleCartModal() {
             document.getElementById('cart-modal').classList.toggle('hidden');
+            if (!document.getElementById('cart-modal').classList.contains('hidden')) {
+                updateCart();
+            }
         }
 
         function toggleCheckoutModal() {
@@ -440,53 +711,69 @@
         }
 
         async function submitOrder(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    
-    // Сопоставляем id с текстом для доставки и оплаты
-    const deliveryText = formData.get('delivery') === 'pickup' ? 'Самовывоз (бесплатно)' :
-                         formData.get('delivery') === 'courier' ? 'Курьер (+500₽)' : 'Неизвестно';
-    
-    const paymentText = formData.get('payment') === 'card' ? 'Картой онлайн' :
-                        formData.get('payment') === 'cash' ? 'Наложенный платеж' : 'Неизвестно';
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            const deliveryText = formData.get('delivery') === 'pickup' ? 'Самовывоз (бесплатно)' :
+                             formData.get('delivery') === 'courier' ? 'Курьер (+500₽)' : 'Неизвестно';
+            
+            const paymentText = formData.get('payment') === 'card' ? 'Картой онлайн' :
+                            formData.get('payment') === 'cash' ? 'Наложенный платеж' : 'Неизвестно';
 
-    const order = {
-        name: formData.get('name'),
-        phone: formData.get('phone'),
-        email: formData.get('email'),
-        telegram: formData.get('telegram'),
-        delivery: deliveryText,
-        payment: paymentText,
-        cart: cart,
-        total: calculateTotal()
-    };
+            const order = {
+                name: formData.get('name'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                telegram: formData.get('telegram'),
+                delivery: deliveryText,
+                payment: paymentText,
+                cart: cart,
+                total: calculateTotal()
+            };
 
-    const botToken = '8102485605:AAHQH0ePYCpdASisEaRKOdMUG6vdgRtBR0s';
-    const chatId = '1778273361';
+            try {
+                const response = await fetch('http://localhost:3000/submitOrder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(order),
+                });
 
-    // Формируем сообщение для Telegram с текстами доставки и оплаты
-    const text = `Новый заказ!\nИмя: ${order.name}\nТелефон: ${order.phone}\nEmail: ${order.email}\nТелеграм: ${order.telegram}\nДоставка: ${order.delivery}\nОплата: ${order.payment}\n\nТовары:\n` +
-                 order.cart.map(item => `${item.title} (Размер: ${item.size}) - ${item.quantity} шт. (${item.price * item.quantity}₽)`).join('\n') +
-                 `\n\nИтого: ${order.total}₽`;
+                if (response.ok) {
+                    alert('Заказ успешно оформлен!');
+                    cart = [];
+                    updateCart();
+                    toggleCheckoutModal();
+                    document.getElementById('order-form').reset();
+                } else {
+                    alert('Ошибка оформления заказа');
+                }
+            } catch (error) {
+                alert('Ошибка подключения к серверу');
+            }
+        }
 
-    try {
-        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: chatId, text })
-        });
-        alert('Заказ успешно оформлен!');
-        cart = [];  // Очистить корзину
-        updateCart();  // Обновить отображение корзины
-        toggleCheckoutModal();  // Закрыть модальное окно
-    } catch (error) {
-        alert('Ошибка оформления заказа');
-    }
-}
-
-
-
+        document.getElementById('order-form').addEventListener('submit', submitOrder);
         window.onload = init;
+
+         // Функция для бургер-меню
+    function toggleMobileMenu() {
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        hamburger.classList.toggle('active');
+        mobileMenu.classList.toggle('open');
+    }
+    
+    // Инициализация бургер-меню
+    document.getElementById('hamburger').addEventListener('click', toggleMobileMenu);
+    
+    // Обновленная функция для счетчика корзины
+    function updateCartCount() {
+        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        document.getElementById('cart-count').textContent = count;
+        document.getElementById('cart-count-mobile').textContent = count;
+    }
     </script>
 </body>
 </html>
