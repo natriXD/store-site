@@ -32,10 +32,9 @@
             to { opacity: 0; }
         }
         .group:hover img {
-    transform: scale(1.1);
-    transition: transform 0.3s ease;
-}
-        /* Стиль для выбранного размера */
+            transform: scale(1.1);
+            transition: transform 0.3s ease;
+        }
         .size-selected {
             border: 2px solid black !important;
             background-color: white !important;
@@ -45,78 +44,79 @@
             aspect-ratio: 2/3;
             height: auto;
         }
-        /* Стили для бургер-меню */
-    .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-    }
-    .hamburger.active span:nth-child(2) {
-        opacity: 0;
-    }
-    .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(5px, -5px);
-    }
-    
-    /* Анимация мобильного меню */
-    .mobile-menu {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease-out;
-    }
-    .mobile-menu.open {
-        max-height: 200px;
-    }
-    
-   
+        
+        /* Стили для мобильного меню (полностью как навигация) */
+        .mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            position: absolute;
+            left: 0;
+            right: 0;
+           background: rgba(255, 255, 255, 0.8); /* Прозрачность как у навигации */
+    backdrop-filter: blur(8px); /* Добавляем размытие */
+    -webkit-backdrop-filter: blur(8px); /* Для Safari */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 40;
+        }
+        .mobile-menu.open {
+            max-height: 300px;
+        }
+        .mobile-menu a {
+            transition: background-color 0.2s ease;
+        }
+        .mobile-menu a:hover {
+    background: rgba(0, 0, 0, 0.05); /* Легкий hover */
+}
     </style>
 </head>
 <body class="bg-white text-black">
     <!-- Навигация -->
-    <header class="fixed w-full bg-gray-500/25 z-50 shadow-md px-2 sm:px-4 backdrop-blur-sm">
-    <div class="container mx-auto px-4">
-        <nav class="flex justify-between items-center py-3">
-            <!-- Логотип -->
-            <a href="#" class="text-xl font-bold">WhyNotClothes</a>
+    <header class="fixed w-full bg-white/80 z-50 shadow-md px-2 sm:px-4 backdrop-blur-sm">
+        <div class="container mx-auto px-4">
+            <nav class="flex justify-between items-center py-3">
+                <!-- Логотип -->
+                <a href="#" class="text-xl font-bold">WhyNotClothes</a>
+                
+                <!-- Десктопное меню -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#" class="hover:text-gray-600 transition">Каталог</a>
+                    <a href="#" class="hover:text-gray-600 transition">О нас</a>
+                    <a href="#" class="hover:text-gray-600 transition">Контакты</a>
+                    <button onclick="toggleCartModal()" class="relative ml-4">
+                        <i class="fas fa-shopping-cart text-lg"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
+                    </button>
+                </div>
+                
+                <!-- Мобильное меню (бургер) -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleCartModal()" class="relative mr-4">
+                        <i class="fas fa-shopping-cart text-lg"></i>
+                        <span id="cart-count-mobile" class="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
+                    </button>
+                    <button id="hamburger" class="flex flex-col justify-between h-5 w-6">
+                        <span class="block w-full h-0.5 bg-black"></span>
+                        <span class="block w-full h-0.5 bg-black"></span>
+                        <span class="block w-full h-0.5 bg-black"></span>
+                    </button>
+                </div>
+            </nav>
             
-            <!-- Десктопное меню -->
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="#" class="hover:text-gray-600 transition">Каталог</a>
-                <a href="#" class="hover:text-gray-600 transition">О нас</a>
-                <a href="#" class="hover:text-gray-600 transition">Контакты</a>
-                <button onclick="toggleCartModal()" class="relative ml-4">
-                    <i class="fas fa-shopping-cart text-lg"></i>
-                    <span id="cart-count" class="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
-                </button>
-            </div>
-            
-            <!-- Мобильное меню (бургер) -->
-            <div class="md:hidden flex items-center ">
-                <button onclick="toggleCartModal()" class="relative mr-4">
-                    <i class="fas fa-shopping-cart text-lg"></i>
-                    <span id="cart-count-mobile" class="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
-                </button>
-                <button id="hamburger" class="hamburger flex flex-col justify-between h-5 w-6">
-                    <span class="block w-full h-0.5 bg-black transition-transform"></span>
-                    <span class="block w-full h-0.5 bg-black transition-opacity"></span>
-                    <span class="block w-full h-0.5 bg-black transition-transform"></span>
-                </button>
-            </div>
-        </nav>
-        
-        <!-- Мобильное меню (контент) -->
-        <div id="mobile-menu" class="mobile-menu md:hidden bg-white/95 backdrop-blur-sm">
-            <div class="flex flex-col space-y-3 py-3">
-                <a href="#" class="py-2 hover:text-gray-600 transition">Каталог</a>
-                <a href="#" class="py-2 hover:text-gray-600 transition">О нас</a>
-                <a href="#" class="py-2 hover:text-gray-600 transition">Контакты</a>
-            </div>
-        </div>
+            <!-- Мобильное меню (контент) -->
+            <div id="mobile-menu" class="mobile-menu md:hidden">
+    <div class="flex flex-col items-center justify-center h-full space-y-4 py-4">
+        <a href="#" class="w-full text-center py-2 hover:bg-gray-500/10 transition" onclick="toggleMobileMenu()">Каталог</a>
+        <a href="#" class="w-full text-center py-2 hover:bg-gray-500/10 transition" onclick="toggleMobileMenu()">О нас</a>
+        <a href="#" class="w-full text-center py-2 hover:bg-gray-500/10 transition" onclick="toggleMobileMenu()">Контакты</a>
     </div>
-</header>
+</div>
+        </div>
+    </header>
 
     <!-- Баннер -->
-    <div class="w-full h-64 sm:h-80 md:h-96 bg-gray-200">
-        <img src="с2.JPG" 
-             alt="Баннер" class="w-full h-full object-cover">
+    <div class="w-full h-64 sm:h-80 md:h-96 bg-gray-200 mb-10">
+        <img src="с2.JPG" alt="Баннер" class="w-full h-full object-cover">
     </div>
 
     <!-- Основной контент -->
@@ -274,6 +274,7 @@
             </div>
         </div>
     </footer>
+
 
     <script>
          // Массив товаров с 5 оттенками для каждой категории
@@ -539,20 +540,20 @@
         }
 
         function renderProducts() {
-            const grid = document.getElementById('products-grid');
-            grid.innerHTML = products.map(product => `
-                <div class="cursor-pointer group" onclick="openProductModal(${product.id})">
-                    <div class="relative overflow-hidden rounded-lg product-card-image">
-                        <img src="${product.images[0]}" alt="${product.title}" 
-                             class="w-full h-full object-cover transition-transform duration-300">
-                    </div>
-                    <div class="mt-3">
-                        <h3 class="font-semibold text-sm sm:text-base">${product.title}</h3>
-                        <p class="text-gray-600 text-sm sm:text-base">${product.price}₽</p>
-                    </div>
-                </div>
-            `).join('');
-        }
+    const grid = document.getElementById('products-grid');
+    grid.innerHTML = products.map(product => `
+        <div class="cursor-pointer group" onclick="openProductModal(${product.id})">
+            <div class="relative overflow-hidden rounded-lg product-card-image">
+                <img src="${product.images[0]}" alt="${product.title}" 
+                     class="w-full h-full object-cover transition-transform duration-300">
+            </div>
+            <div class="mt-1"> <!-- Изменено с mt-3 на mt-1 -->
+                <h3 class="font-semibold text-sm sm:text-base">${product.title}</h3>
+                <p class="text-gray-600 text-sm sm:text-base">${product.price}₽</p>
+            </div>
+        </div>
+    `).join('');
+}
 
         function openProductModal(productId) {
             selectedProduct = products.find(p => p.id === productId);
@@ -634,7 +635,7 @@
                 });
             }
             showNotification();
-            updateCart();
+           updateCartCount();
             closeProductModal();
         }
 
@@ -701,13 +702,13 @@
                 if (item.quantity <= 0) {
                     cart = cart.filter(i => i !== item);
                 }
-                updateCart();
+                updateCartCount();
             }
         }
 
         function removeItem(id, size) {
             cart = cart.filter(item => !(item.id === id && item.size === size));
-            updateCart();
+            updateCartCount();
         }
 
         async function submitOrder(e) {
@@ -758,22 +759,17 @@
         window.onload = init;
 
          // Функция для бургер-меню
-    function toggleMobileMenu() {
-        const hamburger = document.getElementById('hamburger');
-        const mobileMenu = document.getElementById('mobile-menu');
-        hamburger.classList.toggle('active');
-        mobileMenu.classList.toggle('open');
-    }
-    
-    // Инициализация бургер-меню
-    document.getElementById('hamburger').addEventListener('click', toggleMobileMenu);
-    
+     function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('open');
+        }
+        
+        document.getElementById('hamburger').addEventListener('click', toggleMobileMenu);
     // Обновленная функция для счетчика корзины
     function updateCartCount() {
-        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-        document.getElementById('cart-count').textContent = count;
-        document.getElementById('cart-count-mobile').textContent = count;
-    }
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById('cart-count').textContent = count;
+    document.getElementById('cart-count-mobile').textContent = count; // Добавляем эту строку
+}
     </script>
 </body>
 </html>
