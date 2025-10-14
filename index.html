@@ -719,21 +719,21 @@
         }
 
         cartItems.innerHTML = cart.map(item => `
-            <div class="flex items-center justify-between py-3 border-b">
-                <div class="flex items-center gap-4">
-                    <img src="${item.images && item.images[0] ? item.images[0] : ''}" class="w-16 h-16 object-cover rounded">
-                    <div>
-                        <h4 class="font-semibold">${item.title}</h4>
-                        <p class="text-sm">Размер: ${item.size}</p>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-3 border-b">
+                <div class="flex items-center gap-4 min-w-0 flex-1">
+                    <img src="${item.images && item.images[0] ? item.images[0] : ''}" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded">
+                    <div class="min-w-0">
+                        <h4 class="font-semibold truncate">${item.title}</h4>
+                        <p class="text-sm text-gray-600 truncate">Размер: ${item.size}</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-3">
+                <p class="font-semibold sm:order-none order-3">${item.price * item.quantity}₽</p>
+                <div class="flex items-center gap-3 flex-shrink-0 self-end sm:self-auto mt-1 sm:mt-0">
                     <button onclick="changeQuantity(${item.id}, '${item.size}', -1)" class="px-3 py-1 bg-gray-100 rounded">-</button>
                     <span id="qty-${item.id}-${escapeSize(item.size)}">${item.quantity}</span>
                     <button onclick="changeQuantity(${item.id}, '${item.size}', 1)" class="px-3 py-1 bg-gray-100 rounded">+</button>
                     <button onclick="removeItem(${item.id}, '${item.size}')" class="text-red-500 ml-2">×</button>
                 </div>
-                <p class="font-semibold">${item.price * item.quantity}₽</p>
             </div>
         `).join('');
 
