@@ -7,12 +7,19 @@
     <title>WhyNotClothes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             padding-top: 60px;
         }
         header {
             top: 0;
             left: 0;
+        }
+        /* Ensure anchors are not hidden under the fixed header */
+        #products-grid, #footer {
+            scroll-margin-top: 70px;
         }
         .modal-overlay {
             background: rgba(0, 0, 0, 0.7);
