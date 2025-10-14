@@ -44,7 +44,12 @@
             aspect-ratio: 2/3;
             height: auto;
         }
-        
+       #hamburger span {
+    transition: none !important;
+    transform: none !important;
+}
+  
+
         /* Стили для мобильного меню (полностью как навигация) */
         .mobile-menu {
             max-height: 0;
@@ -67,6 +72,7 @@
         }
         .mobile-menu a:hover {
     background: rgba(0, 0, 0, 0.05); /* Легкий hover */
+    
 }
     </style>
 </head>
@@ -79,15 +85,14 @@
                 <a href="#" class="text-xl font-bold">WHYNOT</a>
                 
                 <!-- Десктопное меню -->
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="#" class="hover:text-gray-600 transition">Каталог</a>
-                    <a href="#" class="hover:text-gray-600 transition">О нас</a>
-                    <a href="#" class="hover:text-gray-600 transition">Контакты</a>
-                    <button onclick="toggleCartModal()" class="relative ml-4">
-                        <i class="fas fa-shopping-cart text-lg"></i>
-                        <span id="cart-count" class="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
-                    </button>
-                </div>
+<div class="hidden md:flex items-center space-x-6">
+    <a href="#products-grid" class="hover:text-gray-600 transition">Каталог</a>
+    <a href="#footer" class="hover:text-gray-600 transition">Контакты</a>
+    <button onclick="toggleCartModal()" class="relative ml-4">
+        <i class="fas fa-shopping-cart text-lg"></i>
+        <span id="cart-count" class="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
+    </button>
+</div>
                 
                 <!-- Мобильное меню (бургер) -->
                 <div class="md:hidden flex items-center">
@@ -106,18 +111,17 @@
             <!-- Мобильное меню (контент) -->
             <div id="mobile-menu" class="mobile-menu md:hidden">
     <div class="flex flex-col items-center justify-center h-full space-y-4 py-4">
-        <a href="#" class="w-full text-center py-2 hover:bg-gray-500/10 transition" onclick="toggleMobileMenu()">Каталог</a>
-        <a href="#" class="w-full text-center py-2 hover:bg-gray-500/10 transition" onclick="toggleMobileMenu()">О нас</a>
-        <a href="#" class="w-full text-center py-2 hover:bg-gray-500/10 transition" onclick="toggleMobileMenu()">Контакты</a>
+        <a href="#products-grid" class="w-full text-center py-2 hover:bg-gray-500/10 transition" onclick="toggleMobileMenu()">Каталог</a>
+        <a href="#footer" class="w-full text-center py-2 hover:bg-gray-500/10 transition" onclick="toggleMobileMenu()">Контакты</a>
     </div>
 </div>
         </div>
     </header>
 
     <!-- Баннер -->
-    <div class="w-full h-64 sm:h-80 md:h-96 bg-gray-200 mb-10">
-        <img src="БАННЕР12.png" alt="Баннер" class="w-full h-full object-cover">
-    </div>
+    <div class="relative w-full mb-10 overflow-hidden">
+  <img src="БАННЕР12.png" alt="Баннер" class="w-full h-auto object-cover md:h-[550px]">
+</div>
 
     <!-- Основной контент -->
     <main class="pb-10 container mx-auto px-2 sm:px-4">
@@ -250,7 +254,7 @@
     </div>
     
     <!-- Footer -->
-    <footer class="bg-black text-white py-8">
+    <footer id="footer" class="bg-black text-white py-8">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-4 md:mb-0">
@@ -881,6 +885,27 @@
     // ====== Запуск ======
     window.addEventListener('load', init);
 
+
+  const hamburger = document.getElementById("hamburger");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  function toggleMobileMenu() {
+    mobileMenu.classList.toggle("open");
+    const spans = hamburger.querySelectorAll("span");
+    spans.forEach((span, index) => {
+      if (mobileMenu.classList.contains("open")) {
+        span.style.transformOrigin = "center";
+        if (index === 0) span.style.transform = "rotate(45deg) translateY(7px)";
+        if (index === 1) span.style.opacity = "0";
+        if (index === 2) span.style.transform = "rotate(-45deg) translateY(-7px)";
+      } else {
+        span.style.transform = "";
+        span.style.opacity = "1";
+      }
+    });
+  }
+
+  hamburger.addEventListener("click", toggleMobileMenu);
 
     </script>
 </body>
