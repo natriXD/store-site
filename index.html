@@ -206,12 +206,11 @@
             <div class="bg-white w-full max-w-2xl mx-4 rounded-lg">
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold">Оформление заказа</h2>
+                        <h2 class="text-2xl font-bold">Форма для заказа</h2>
                         <button onclick="toggleCheckoutModal()" class="text-2xl p-2">×</button>
                     </div>
                     <form id="order-form" onsubmit="submitOrder(event)">
-                        <div class="mb-6">
-                            <h3 class="text-lg font-bold mb-4">Контактные данные</h3>
+                        <div class="mb-6">                           
                             <input type="text" name="name" placeholder="ФИО" required 
                                    class="w-full border p-2 mb-3 rounded">
                             <input type="tel" name="phone" placeholder="Телефон" required 
@@ -221,36 +220,6 @@
                             <input type="text" name="telegram" placeholder="Телеграмм (опционально)" 
                                    class="w-full border p-2 rounded">
                         </div>
-                        <div class="mb-6">
-                            <h3 class="text-lg font-bold mb-4">Доставка</h3>
-                            <div class="flex flex-col gap-3">
-                                <label class="flex items-center gap-2">
-                                    <input type="radio" name="delivery" value="pickup" required>
-                                    Самовывоз (бесплатно)
-                                </label>
-                                <label class="flex items-center gap-2">
-                                    <input type="radio" name="delivery" value="courier" required>
-                                    Курьер (+500₽)
-                                </label>
-                            </div>
-                        </div>
-                        <div class="mb-6">
-                            <h3 class="text-lg font-bold mb-4">Способ оплаты</h3>
-                            <div class="flex flex-col gap-3">
-                                <label class="flex items-center gap-2">
-                                    <input type="radio" name="payment" value="card" required>
-                                    Картой онлайн
-                                </label>
-                                <label class="flex items-center gap-2">
-                                    <input type="radio" name="payment" value="cash" required>
-                                    Наложенный платеж
-                                </label>
-                            </div>
-                        </div>
-                        <label class="flex items-center gap-2 mb-6">
-                            <input type="checkbox" required class="w-4 h-4">
-                            <span>Согласен на обработку персональных данных</span>
-                        </label>
                         <button type="submit" class="bg-black text-white w-full py-3 rounded-lg">
                             Подтвердить заказ
                         </button>
