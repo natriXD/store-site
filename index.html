@@ -81,6 +81,125 @@
     background: rgba(0, 0, 0, 0.05); /* Легкий hover */
     
 }
+.product-modal {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-height: 100vh;
+  overflow-y: auto;
+  padding: 20px;
+  -webkit-overflow-scrolling: touch; /* для iPhone */
+}
+
+/* Крестик закрытия */
+.product-modal .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 101;
+}
+
+/* Кнопка "Добавить в корзину" */
+.add-to-cart-btn {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 16px 0;
+  font-weight: 600;
+  font-size: 16px;
+  text-align: center;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  z-index: 100;
+  border-radius: 0;
+}
+.product-gallery {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.product-thumbnails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 70px;
+  flex-shrink: 0;
+  overflow-y: auto;          /* прокрутка, если миниатюр много */
+  max-height: 90vh;          /* ограничиваем по экрану */
+  scrollbar-width: thin;
+}
+
+.product-thumbnails img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  object-fit: cover;
+}
+.product-thumbnails img:hover {
+  opacity: 1;
+  transform: scale(1.03);
+}
+.active-thumb {
+  opacity: 1 !important;
+  border: 2px solid black;
+}
+
+/* Главное фото */
+.product-main-image {
+  flex: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.product-main-image img {
+  width: auto;               /* сохраняем пропорции */
+  height: 100%;
+  max-height: 90vh;          /* не вылезает за экран */
+  object-fit: contain;       /* показываем полностью */
+  border-radius: 12px;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+  .product-gallery {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .product-thumbnails {
+    width: 60px;
+    max-height: 85vh;
+  }
+
+  .product-main-image img {
+    max-height: 85vh;
+  }
+}
     </style>
 </head>
 <body class="bg-white text-black">
@@ -266,7 +385,7 @@
                 price: 3500, 
                 images: [
                     'футболкамоделбел.jpg',
-                    'https://via.placeholder.com/400x500/F5F5F5/000000?text=White+Back',
+                    'футболкабел.JPG',
                     'https://via.placeholder.com/400x500/F5F5F5/000000?text=White+Detail'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
@@ -278,7 +397,7 @@
                 price: 3500, 
                 images: [
                     'футболкамоделчерн.jpg',
-                    'https://via.placeholder.com/400x500/000000/FFFFFF?text=Black+Back',
+                    'футболкачерн.JPG',
                     'https://via.placeholder.com/400x500/000000/FFFFFF?text=Black+Detail'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
@@ -290,7 +409,7 @@
                 price: 3500, 
                 images: [
                     'футболкамоделсин.jpg',
-                    'https://via.placeholder.com/400x500/87CEEB/000000?text=Blue+Back',
+                    'футболкасин.JPG',
                     'https://via.placeholder.com/400x500/87CEEB/000000?text=Blue+Detail'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
@@ -302,7 +421,7 @@
                 price: 3500, 
                 images: [
                     'футболкамоделроз.jpg',
-                    'https://via.placeholder.com/400x500/CB4154/FFFFFF?text=Red+Back',
+                    'футболкароз.JPG',
                     'https://via.placeholder.com/400x500/CB4154/FFFFFF?text=Red+Detail'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
@@ -314,7 +433,7 @@
                 price: 3500, 
                 images: [
                     'футболкамоделзелен.jpg',
-                    'https://via.placeholder.com/400x500/808000/FFFFFF?text=Green+Back',
+                    'футболказелен.JPG',
                     'https://via.placeholder.com/400x500/808000/FFFFFF?text=Green+Detail'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
@@ -585,40 +704,51 @@
 
     // ====== Модал товара (как было) ======
     function openProductModal(productId) {
-        selectedProduct = products.find(p => p.id === productId);
-        selectedSize = null;
-        if (!selectedProduct) return;
-        document.getElementById('modal-title').textContent = selectedProduct.title;
-        document.getElementById('modal-price').textContent = `${selectedProduct.price}₽`;
-        document.getElementById('modal-details').textContent = selectedProduct.details;
+  selectedProduct = products.find(p => p.id === productId);
+  selectedSize = null;
+  if (!selectedProduct) return;
 
-        const imageContainer = document.querySelector('.modal-image-container');
-        if (imageContainer) {
-            imageContainer.innerHTML = `
-                <div class="main-image">
-                    <img id="modal-image" src="${selectedProduct.images[0]}" alt="" class="object-contain max-h-[300px] md:max-h-[500px]">
-                </div>
-                <div class="thumbnails flex gap-2 mt-4">
-                    ${selectedProduct.images.map((img, index) => `
-                        <img src="${img}" alt="" class="w-16 h-16 object-cover cursor-pointer border-2 ${index === 0 ? 'border-black' : 'border-transparent'}"
-                             onclick="changeModalImage(this, '${img}')">
-                    `).join('')}
-                </div>
-            `;
-        }
+  document.getElementById('modal-title').textContent = selectedProduct.title;
+  document.getElementById('modal-price').textContent = `${selectedProduct.price}₽`;
+  document.getElementById('modal-details').textContent = selectedProduct.details;
 
-        const sizeButtons = document.getElementById('size-buttons');
-        if (sizeButtons) {
-            sizeButtons.innerHTML = selectedProduct.sizes.map(size => `
-                <button onclick="selectSize('${size}', this)" 
-                        class="px-4 py-2 rounded-lg border-2 border-gray-300 bg-black text-white hover:border-black transition-all">
-                    ${size}
-                </button>
-            `).join('');
-        }
+  const imageContainer = document.querySelector('.modal-image-container');
+  if (imageContainer) {
+    imageContainer.innerHTML = `
+      <div class="product-gallery flex gap-4 w-full justify-center md:justify-start">
+        <!-- Превьюшки -->
+        <div class="product-thumbnails flex md:flex-col gap-3 w-24 md:w-20 flex-shrink-0">
+          ${selectedProduct.images.map((img, index) => `
+            <img 
+              src="${img}" 
+              alt="${selectedProduct.title}" 
+              class="w-full rounded-lg cursor-pointer ${index === 0 ? 'active-thumb' : ''}" 
+              onclick="changeMainImage(this, '${img}')"
+            >
+          `).join('')}
+        </div>
 
-        document.getElementById('product-modal').classList.remove('hidden');
-    }
+        <!-- Главное фото -->
+        <div class="product-main-image flex-1 rounded-lg overflow-hidden">
+          <img id="mainImage" src="${selectedProduct.images[0]}" alt="${selectedProduct.title}" class="w-full h-full object-cover">
+        </div>
+      </div>
+    `;
+  }
+
+  const sizeButtons = document.getElementById('size-buttons');
+  if (sizeButtons) {
+    sizeButtons.innerHTML = selectedProduct.sizes.map(size => `
+      <button onclick="selectSize('${size}', this)" 
+        class="px-4 py-2 rounded-lg border-2 border-gray-300 bg-black text-white hover:border-black transition-all">
+        ${size}
+      </button>
+    `).join('');
+  }
+
+  document.getElementById('product-modal').classList.remove('hidden');
+}
+
 
     function selectSize(size, button) {
         selectedSize = size;
@@ -630,14 +760,13 @@
         button.classList.remove('bg-black', 'text-white');
     }
 
-    function changeModalImage(thumb, imgSrc) {
-        const imgEl = document.getElementById('modal-image');
-        if (imgEl) imgEl.src = imgSrc;
-        document.querySelectorAll('.thumbnails img').forEach(img => {
-            img.classList.toggle('border-black', img === thumb);
-            img.classList.toggle('border-transparent', img !== thumb);
-        });
-    }
+    function changeMainImage(el, imgSrc) {
+  const main = document.getElementById('mainImage');
+  if (main) main.src = imgSrc;
+  document.querySelectorAll('.product-thumbnails img').forEach(img => img.classList.remove('active-thumb'));
+  el.classList.add('active-thumb');
+}
+
 
     function closeProductModal() {
         document.getElementById('product-modal').classList.add('hidden');
