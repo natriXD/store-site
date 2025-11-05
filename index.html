@@ -96,58 +96,83 @@
 }
 
 /* Крестик закрытия */
-.product-modal .close-btn {
+.product-modal .close-btn,
+#product-modal button[onclick="closeProductModal()"] {
   position: absolute;
   top: 10px;
-  right: 10px;
-  background: transparent;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(4px);
   border: none;
-  font-size: 28px;
+  font-size: 22px;
   line-height: 1;
   cursor: pointer;
-  z-index: 101;
+  z-index: 200;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+.product-modal .close-btn:hover,
+#product-modal button[onclick="closeProductModal()"]:hover {
+  background: rgba(0, 0, 0, 0.1);
 }
 
 /* Кнопка "Добавить в корзину" */
-.add-to-cart-btn {
+.add-to-cart-btn,
+#product-modal .add-to-cart-btn,
+#product-modal button[onclick="addToCart()"] {
   position: sticky;
   bottom: 0;
   left: 0;
   right: 0;
   width: 100%;
-  padding: 16px 0;
+  padding: 12px 0;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 15px;
   text-align: center;
   background: black;
   color: white;
   border: none;
   cursor: pointer;
-  z-index: 100;
+  z-index: 150;
   border-radius: 0;
+  transition: background 0.2s ease;
 }
+.add-to-cart-btn:hover {
+  background: #222;
+}
+
+/* Галерея товара */
 .product-gallery {
   display: flex;
   flex-direction: row;
-  gap: 12px;
+  gap: 8px;
   align-items: flex-start;
   justify-content: center;
   width: 100%;
-  max-width: 900px;
   margin: 0 auto;
+  padding: 0 4px;
+  max-width: 100%;
 }
 
+/* Левая колонка миниатюр */
 .product-thumbnails {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  width: 70px;
+  gap: 6px;
+  width: 56px;
   flex-shrink: 0;
-  overflow-y: auto;          /* прокрутка, если миниатюр много */
-  max-height: 90vh;          /* ограничиваем по экрану */
+  overflow-y: auto;
+  max-height: 85vh;
   scrollbar-width: thin;
+  padding-right: 2px;
 }
 
+/* Миниатюры */
 .product-thumbnails img {
   width: 100%;
   aspect-ratio: 1/1;
@@ -174,32 +199,85 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 400px;
 }
 
 .product-main-image img {
-  width: auto;               /* сохраняем пропорции */
-  height: 100%;
-  max-height: 90vh;          /* не вылезает за экран */
-  object-fit: contain;       /* показываем полностью */
+  width: 100%;
+  height: auto;
+  max-height: 90vh;
+  object-fit: contain;
   border-radius: 12px;
 }
 
-/* Мобильная адаптация */
-@media (max-width: 768px) {
+/* Крестик */
+#product-modal button[onclick="closeProductModal()"] {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  width: 30px;
+  height: 30px;
+  line-height: 1;
+  z-index: 200;
+}
+
+/* Кнопка добавить в корзину */
+.add-to-cart-btn {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 10px 0;
+  font-weight: 600;
+  font-size: 14px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  z-index: 150;
+  transition: background 0.2s ease;
+}
+.add-to-cart-btn:hover {
+  background: #222;
+}
+
+/* Адаптация под узкие экраны */
+@media (max-width: 480px) {
   .product-gallery {
-    flex-direction: row;
-    align-items: stretch;
+    gap: 6px;
   }
 
   .product-thumbnails {
-    width: 60px;
-    max-height: 85vh;
+    width: 50px;
+    gap: 4px;
   }
 
   .product-main-image img {
-    max-height: 85vh;
+    max-height: 80vh;
+  }
+
+  #product-modal button[onclick="closeProductModal()"] {
+    width: 26px;
+    height: 26px;
+    font-size: 18px;
+    top: 6px;
+    right: 6px;
   }
 }
+
+  .add-to-cart-btn,
+  #product-modal .add-to-cart-btn {
+    padding: 10px 0;
+    font-size: 14px;
+  }
+
+
     </style>
 </head>
 <body class="bg-white text-black">
@@ -382,81 +460,81 @@
             { 
                 id: 1, 
                 title: 'Футболка Classic White', 
-                price: 3500, 
+                price: 2300, 
                 images: [
                     'футболкамоделбел.jpg',
                     'футболкабел.JPG',
                     'https://via.placeholder.com/400x500/F5F5F5/000000?text=White+Detail'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: '100% хлопок, классический крой' 
+                details: 'Ткань: Кулирка Мягкая, как облако, лёгкая, как утро после бессонной ночи. Дышит вместе с тобой — не липнет, не сковывает, не выгорает. Футболка, которая создана, чтобы жить в ритме города.' 
             },
             { 
                 id: 2, 
                 title: 'Футболка Midnight Black', 
-                price: 3500, 
+                price: 2300, 
                 images: [
                     'футболкамоделчерн.jpg',
                     'футболкачерн.JPG',
                     'https://via.placeholder.com/400x500/000000/FFFFFF?text=Black+Detail'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: '100% хлопок, классический крой' 
+                details: 'Ткань: Кулирка Мягкая, как облако, лёгкая, как утро после бессонной ночи. Дышит вместе с тобой — не липнет, не сковывает, не выгорает. Футболка, которая создана, чтобы жить в ритме города.' 
             },
             { 
                 id: 3, 
                 title: 'Футболка Sky Blue', 
-                price: 3500, 
+                price: 2300, 
                 images: [
                     'футболкамоделсин.jpg',
                     'футболкасин.JPG',
                     'https://via.placeholder.com/400x500/87CEEB/000000?text=Blue+Detail'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: '100% хлопок, классический крой' 
+                details: 'Ткань: Кулирка Мягкая, как облако, лёгкая, как утро после бессонной ночи. Дышит вместе с тобой — не липнет, не сковывает, не выгорает. Футболка, которая создана, чтобы жить в ритме города.' 
             },
             { 
                 id: 4, 
                 title: 'Футболка Brick Red', 
-                price: 3500, 
+                price: 2300, 
                 images: [
                     'футболкамоделроз.jpg',
                     'футболкароз.JPG',
                     'https://via.placeholder.com/400x500/CB4154/FFFFFF?text=Red+Detail'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: '100% хлопок, классический крой' 
+                details: 'Ткань: Кулирка Мягкая, как облако, лёгкая, как утро после бессонной ночи. Дышит вместе с тобой — не липнет, не сковывает, не выгорает. Футболка, которая создана, чтобы жить в ритме города.' 
             },
             { 
                 id: 5, 
                 title: 'Футболка Olive Green', 
-                price: 3500, 
+                price: 2300, 
                 images: [
                     'футболкамоделзелен.jpg',
                     'футболказелен.JPG',
                     'https://via.placeholder.com/400x500/808000/FFFFFF?text=Green+Detail'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: '100% хлопок, классический крой' 
+                details: 'Ткань: Кулирка Мягкая, как облако, лёгкая, как утро после бессонной ночи. Дышит вместе с тобой — не липнет, не сковывает, не выгорает. Футболка, которая создана, чтобы жить в ритме города.' 
             },
             
             // Лонгсливы (5 оттенков)
             { 
                 id: 6, 
                 title: 'Лонгслив White', 
-                price: 5000, 
+                price: 3800, 
                 images: [
                     'Модель-белый.JPG',
                     'б1.JPG',
                     'б2.JPG'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Хлопок 95%, эластан 5%, утепленный' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.'
             },
             { 
                 id: 7, 
                 title: 'Лонгслив Blue', 
-                price: 5000, 
+                price: 3800, 
                 images: [
                     'Модель-синий.jpg',
                     'с1.JPG',
@@ -465,24 +543,24 @@
                     'с4.JPG'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Хлопок 95%, эластан 5%, утепленный' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             },
             { 
                 id: 8, 
                 title: 'Лонгслив Pink', 
-                price: 5000, 
+                price: 3800, 
                 images: [
                     'Модель Розовый.jpg',
                     'р1.JPG',
                     'р2.JPG'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Хлопок 95%, эластан 5%, утепленный' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             },
             { 
                 id: 9, 
                 title: 'Лонгслив Black', 
-                price: 5000, 
+                price: 3800, 
                 images: [
                     'Модель-черный.jpg',
                     'ч1.JPG',
@@ -491,12 +569,12 @@
                     'ч4.JPG'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Хлопок 95%, эластан 5%, утепленный' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             },
             { 
                 id: 10, 
                 title: 'Лонгслив Green', 
-                price: 5000, 
+                price: 3800, 
                 images: [
                     'Модель-зеленый.jpg',
                     'з1.JPG',
@@ -505,131 +583,131 @@
                     'з4.JPG',
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Хлопок 95%, эластан 5%, утепленный' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             },
             
             // Спортивные штаны (5 оттенков)
             { 
                 id: 11, 
                 title: 'Спортштаны Black', 
-                price: 5000, 
+                price: 4200, 
                 images: [
                     'модель черный.jpg',
                     'черные.JPG',
                     'черные2.JPG',
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Полиэстер 80%, хлопок 20%, эластичный пояс' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             },
             { 
                 id: 12, 
                 title: 'Спортштаны Green', 
-                price: 5000, 
+                price: 4200, 
                 images: [
                     'модельзелен.jpg',
                     'зеленые.JPG',
                     'https://via.placeholder.com/400x500/013220/FFFFFF?text=Dark+Green+Detail'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Полиэстер 80%, хлопок 20%, эластичный пояс' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             },
             { 
                 id: 13, 
                 title: 'Спортштаны Blue', 
-                price: 5000, 
+                price: 4200, 
                 images: [
                     'модельсин.jpg',
                     'синие.JPG',
                     'синие2.JPG',
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Полиэстер 80%, хлопок 20%, эластичный пояс' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             },
             { 
                 id: 14, 
                 title: 'Спортштаны White', 
-                price: 5000, 
+                price: 4200, 
                 images: [
                     'модельбелый.jpg',
                     'https://via.placeholder.com/400x500/B2BEB5/000000?text=Ash+Grey+Back',
                     'https://via.placeholder.com/400x500/B2BEB5/000000?text=Ash+Grey+Detail'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Полиэстер 80%, хлопок 20%, эластичный пояс' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             },
             { 
                 id: 15, 
                 title: 'Спортштаны Pink', 
-                price: 5000, 
+                price: 4200, 
                 images: [
                     'модель роз.jpg',
                     'розовые.jpg',
                     'https://via.placeholder.com/400x500/000000/FFFFFF?text=Black+Camo+Detail'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Полиэстер 80%, хлопок 20%, камуфляжный принт' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             },
             
             // Комплекты (5 оттенков)
             { 
                 id: 16, 
                 title: 'Комплект Grey Set', 
-                price: 8000, 
+                price: 7800, 
                 images: [
                     'komplektmodelcern.JPG',
                     'komplektcern.JPG',
                     'komplektcern2.JPG'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Футболка + штаны, хлопок 100%' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             },
             { 
                 id: 17, 
                 title: 'Комплект Blue Set', 
-                price: 8000, 
+                price: 7800, 
                 images: [
                     'komplektmodelsin.JPG',
                     'komplektsin.JPG',
                     'komplektsin2.JPG'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Футболка + штаны, хлопок 100%' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             },
             { 
                 id: 18, 
                 title: 'Комплект Pink Set', 
-                price: 8000, 
+                price: 7800, 
                 images: [
                     'komplektmodelpink.jpg',
                     'komplektpink.JPG',
                     'komplektpink2.JPG'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Футболка + штаны, хлопок 100%' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             },
             { 
                 id: 19, 
                 title: 'Комплект Army Set', 
-                price: 8000, 
+                price: 7800, 
                 images: [
                     'komplektmodelzelen.JPG',
                     'komplektzelen.JPG',
                     'komplektzelen2.JPG'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Футболка + штаны, милитари стиль' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             },
             { 
                 id: 20, 
                 title: 'Комплект Black Set', 
-                price: 8000, 
+                price: 7800, 
                 images: [
                     'komplektmodelbel.jpg',
                     'komplektbel.JPG',
                     'komplektbel2.JPG'
                 ], 
                 sizes: ['XS', 'S', 'M', 'L', 'XL'], 
-                details: 'Футболка + штаны, хлопок 100%' 
+                details: 'Ткань: Футер с начесом Тепло, которое чувствуешь, ещё до того как наденешь. Плотный футер с мягким начёсом внутри — будто обнимает. Идеален для движения, улицы и тишины после неё. WhyNot — когда комфорт становится стилем.' 
             }
         ];
 
